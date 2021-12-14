@@ -1,0 +1,41 @@
+{
+  "name": "vite-react-app",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@douyinfe/semi-ui": "^2.1.1",
+    "@elonwu/hooks": "^0.2.1",
+    "@elonwu/router": "^0.0.9",
+    "@elonwu/utils": "^0.2.2",
+    "@elonwu/web-calendar": "^0.1.0",
+    "@elonwu/web-chart": "^0.3.7",
+    "@vitejs/plugin-react": "^1.0.7",
+    "classnames": "^2.3.1",
+    "moment": "^2.29.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.21.0",
+    "vite": "^2.7.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
+    "@types/moment": "^2.13.0",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "autoprefixer": "^9",
+    "html-webpack-externals-plugin": "^3.8.0",
+    "http-server-spa": "^1.3.0",
+    "postcss": "^7",
+    "postcss-import": "^14.0.2",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
+    "typescript": "^4.5.4"
+  }
+}
