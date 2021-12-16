@@ -1,16 +1,53 @@
-import React, { useMemo } from 'react';
-import { useController, useForm, useFormState } from 'react-hook-form';
+import React, { FC, ReactChild, ReactElement, ReactNode, useMemo } from 'react';
+import {
+  Control,
+  useController,
+  useForm,
+  useFormState,
+  FieldError,
+  ValidationRule,
+  RegisterOptions,
+} from 'react-hook-form';
 
 import { Tooltip } from '@douyinfe/semi-ui';
 import { IconAlertCircle } from '@douyinfe/semi-icons';
 import { notNil } from '@elonwu/utils';
 
-export const useElonForm = (
-  formItems: any[],
-  onSubmit: any,
-  onError?: any,
-  row?: boolean,
-) => {
+export type FormItemRules = Omit<
+  RegisterOptions<any, any>,
+  'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
+>;
+
+export interface ElonFormItem {
+  key: string;
+  label?: string;
+  defaultValue?: any;
+  rules?: FormItemRules;
+  content?: ReactNode;
+  render?: (value: any) => ReactNode;
+  row?: boolean;
+  labelWidth?: number;
+}
+
+export interface UseElonFormProps {
+  formItems: ElonFormItem[];
+  onSubmit: (value: any) => void;
+  onError?: (err: any) => void;
+  row?: boolean;
+}
+
+export interface FormItemRendererProps {
+  name: string;
+  label?: string;
+  error?: Error;
+  isValidating?: boolean;
+  row?: boolean;
+  labelWidth?: number;
+}
+
+export const useElonForm = (props: UseElonFormProps) => {
+  const { formItems, onSubmit, onError, row } = props;
+
   const methods = useForm();
 
   const { isValidating, isSubmitting, errors } = useFormState({
@@ -18,11 +55,17 @@ export const useElonForm = (
   });
 
   const sections = useMemo(() => {
-    const sections: any = {};
+    const sections: { [key: string]: ReactNode } = {};
 
     formItems.forEach((item) => {
       sections[item.key] = (
-        <FormItem item={item} control={methods.control} row={row} />
+        // @ts-ignore
+        <FormItem
+          key={item.key}
+          item={item}
+          control={methods.control}
+          row={row}
+        />
       );
     }, []);
 
@@ -41,9 +84,13 @@ export const useElonForm = (
 
 const FormItem = ({
   control,
-  item: { key, label, rules, defaultValue, content, render, row },
+  item: { key, label, rules, defaultValue, content, render, row, labelWidth },
   row: formRow,
-}: any) => {
+}: {
+  control: Control;
+  item: ElonFormItem;
+  row?: boolean;
+}) => {
   const {
     field: { onChange, onBlur, name, value, ref },
     fieldState: { invalid, isTouched },
@@ -56,8 +103,8 @@ const FormItem = ({
   });
 
   // 仅指定content, 默认构造
-  if (content) {
-    const props = Object.assign({}, content?.props, {
+  if (!!content) {
+    const props = Object.assign({}, (content as any)?.props, {
       value,
       onChange,
     });
@@ -70,8 +117,9 @@ const FormItem = ({
         row={formRow || row}
         error={errors?.[key]}
         isValidating={isValidating}
+        labelWidth={labelWidth}
       >
-        {React.cloneElement(content, props)}
+        {React.cloneElement(content as any, props)}
       </FormItemRenderer>
     );
   }
@@ -95,15 +143,16 @@ const FormItem = ({
   }
 };
 
-const FormItemRenderer = ({
-  name,
-  label,
-  error,
-  isValidating,
-  children,
-  row = false,
-  labelWidth = 80,
-}: any) => {
+const FormItemRenderer: FC<FormItemRendererProps> = (props) => {
+  const {
+    name,
+    label,
+    error,
+    isValidating,
+    children,
+    row = false,
+    labelWidth = 80,
+  } = props;
   const errMsg = useMemo(() => error?.message, [error]);
 
   const layoutCls = useMemo(

@@ -4,46 +4,36 @@ import moment from 'moment';
 import { Button, DatePicker, Input } from '@douyinfe/semi-ui';
 
 import { ElonForm } from '../components/Form/Form';
+import { ElonFormItem } from '@/components/Form/useForm';
 
 const FormHook = () => {
-  const [dynamic, setDynamic] = useState(true);
-
-  const formItems = useMemo(
-    () =>
-      dynamic
-        ? []
-        : [
-            {
-              key: 'name',
-              label: '名字',
-              defaultValue: 'ElonWu',
-              rules: { required: { value: true, message: '必填的' } },
-              content: <Input placeholder="请输入名字" />,
-            },
-            {
-              key: 'birthday',
-              label: '出生日',
-              rules: {
-                validate: (date?: Date) => {
-                  if (!date) return '必填的';
-                  if (date && moment(date).isAfter(moment().startOf('day'))) {
-                    return '错误日期';
-                  }
-                },
-              },
-              content: (
-                <DatePicker placeholder="请输入生日" className="flex-1" />
-              ),
-            },
-          ],
-    [dynamic],
+  const formItems: ElonFormItem[] = useMemo(
+    () => [
+      {
+        key: 'name',
+        label: '名字',
+        defaultValue: 'ElonWu',
+        rules: { required: { value: true, message: '必填的' } },
+        content: <Input placeholder="请输入名字" />,
+      },
+      {
+        key: 'birthday',
+        label: '出生日',
+        rules: {
+          validate: (date?: Date) => {
+            if (!date) return '必填的';
+            if (date && moment(date).isAfter(moment().startOf('day'))) {
+              return '错误日期';
+            }
+          },
+        },
+        content: <DatePicker placeholder="请输入生日" className="flex-1" />,
+        row: false,
+        labelWidth: 120,
+      },
+    ],
+    [],
   );
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDynamic(false), 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -64,7 +54,7 @@ const FormHook = () => {
             提交
           </Button>
         )}
-        row
+        row={false}
       />
 
       {/* <FlexWrap /> */}

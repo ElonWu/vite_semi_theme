@@ -1,8 +1,20 @@
+import React, { CSSProperties, FC } from 'react';
+
 import { Button } from '@douyinfe/semi-ui';
 
-import { useElonForm } from './useForm';
+import { useElonForm, ElonFormItem } from './useForm';
 
-export const ElonForm = ({
+export interface ELonFormProps {
+  onSubmit: (value: any) => void;
+  onError: (err: any) => void;
+  className?: string;
+  trigger?: any;
+  style?: CSSProperties;
+  formItems: ElonFormItem[];
+  row?: boolean;
+}
+
+export const ElonForm: FC<ELonFormProps> = ({
   onSubmit,
   onError,
   className,
@@ -10,13 +22,13 @@ export const ElonForm = ({
   style = {},
   formItems = [],
   row = false,
-}: any) => {
-  const { sections, submit, isSubmitting } = useElonForm(
+}) => {
+  const { sections, submit, isSubmitting } = useElonForm({
     formItems,
     onSubmit,
     onError,
     row,
-  );
+  });
 
   return (
     <form
